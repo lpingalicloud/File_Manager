@@ -15,8 +15,9 @@ def changehome():
     home = Path.home()
     os.chdir(home)
     print(f"current directory is at the home directory{home}")
-def incorrectpath(path):
-    return path.is_dir()
+def correctpath(path):
+    p=Path(path)
+    return p.is_dir()
 def docsort(name,p):
     if(name.suffix == ".txt" or name.suffix == ".docx" or name.suffix == ".pdf"):
         try:
@@ -39,11 +40,37 @@ def picsort(name,p):
             shutil.move(name,p/'Pics')
         except PermissionError:
             shutil.move(p,'Pics')
+def codesort(name,p):
+    if(name.suffix == ".py" or name.suffix == ".c" or name.suffix == ".json"):
+        try:
+            os.mkdir(p/'Code')
+            os.chdir(p)
+            shutil.move(name,'Code')
+            
+        except FileExistsError:
+            shutil.move(name,p/'Code')
+        except PermissionError:
+            shutil.move(p,'Code')
+
+def nonesort(name,p):
+    if(name.suffix == None):
+        try:
+            os.mkdir(p/"Nope")
+            os.chdir(p)
+            shutil.move(name,'Nope')
+            
+        except FileExistsError:
+            shutil.move(name,p/'Nope')
+        except PermissionError:
+            shutil.move(p,'Nope')
+
 
 def checkfiles(path):
     p=Path(path)
     for name in p.glob('*'):
         docsort(name,p)
-        picsort(name)
+        picsort(name, p)
+        codesort(name,p)
+        nonesort(name,p)
 
                 
